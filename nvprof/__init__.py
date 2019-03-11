@@ -118,9 +118,11 @@ def slice_events(conn, start_ns, end_ns):
     """
     Delete events outside the given range, keep events inside and overlapping.
     """
-    base_time, _ = time_range(conn)
+    base_time, end_time = time_range(conn)
     # absolute time of the window
     abs_start_ns, abs_end_ns = base_time + start_ns, base_time + end_ns
+    if end_ns == -1:
+        abs_end_ns = end_time
     c = conn.cursor()
     for table in tables_with_prefix(interval_tables):
         c.execute('DELETE FROM {} WHERE end < {} OR start > {}'.format(table, abs_start_ns, abs_end_ns))

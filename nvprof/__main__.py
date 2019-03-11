@@ -12,6 +12,8 @@ def cmd_truncate(db_file):
 def cmd_slice(db_file, start_sec, end_sec):
     def slice_events(conn):
         nvprof.slice_events(conn, int(start_sec * 1e9), int(end_sec * 1e9))
+    if end_sec == None or end_sec < 0:
+        end_sec = -1
     nvprof.with_conn(db_file, slice_events)
 
 def parse_args():
